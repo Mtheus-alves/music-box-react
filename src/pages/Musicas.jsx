@@ -1,47 +1,53 @@
-import React from "react";
-import ItemMusica from "../components/ItemMusica";
+import React, { useEffect, useState } from "react";
+import ItemMusica from '../components/ItemMusica';
 import Menu from "../components/Menu";
 
+import api from '../api';
+
 function Musicas() {
-    return (
-        <>
-            <Menu />
 
-            <div className="container">
+  const [musicas, setMusicas] = useState([]);
 
-                <div className="filter">
-                    <button className="btn">Adicionar</button>
-                </div>
-            </div>
+  useEffect(() => {
 
-            <div className="container">
-                <div className="music-boxes">
+    api.get().then((res) => {
+      setMusicas(res.data);
+    }).catch((err) => {
+      console.log(err);
+    })
 
-                    <ItemMusica
-                        musica="November"
-                        artista="Tyler,the Creator"
-                        genero="RAP"
-                        ano="2018"
-                    />
+  }, [])
 
-                    <ItemMusica
-                        musica="Jail"
-                        artista="Ye"
-                        genero="RAP"
-                        ano="2021"
-                    />
+  return (
+    <>
+      <Menu />
 
-                    <ItemMusica
-                        musica="Nights"
-                        artista="Frank Ocean"
-                        genero="RAP Soul"
-                        ano="2016"
-                    />
+      <div className="container">
+        <div className="filter">
+          <button className="btn">Adicionar</button>
+        </div>
+      </div>
 
-                </div>
-            </div>
-        </>
-    );
+      <div className="container">
+        <div className="music-boxes">
+
+          {
+            musicas.map(musica => (
+              <ItemMusica
+                musica={musica.musica}
+                artista={musica.artista}
+                genero={musica.categoria}
+                ano={musica.ano}
+                id={musica.id}
+                key={musica.id}
+              />
+            ))
+          }
+
+        </div>
+      </div>
+    </>
+  );
 }
 
 export default Musicas;
